@@ -4,7 +4,7 @@ $(function(){
     let input = $('#input');
     let myName = false;
 
-    socket = io.connect('http://localhost:3000');
+    socket = io.connect('http://120.24.253.225/chat/');
     socket.on('open',function(){
         status.text('choose a name');
     });
