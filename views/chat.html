@@ -20,13 +20,16 @@
     </div>
     <div id="content"></div>
     <script>
+        // var host = "http://120.24.253.225:80/chat/";
+        // var host = 'http://172.16.14.150:3000';
+        var host = "http://120.24.253.225:3000";
         $(function () {
             let content = $('#content');
             let status = $('#status');
             let input = $('#input');
             let myName = false;
 
-            socket = io.connect("http://120.24.253.225/chat/");
+            socket = io.connect(host);
             socket.on('open', function () {
                 status.text('choose a name');
             });

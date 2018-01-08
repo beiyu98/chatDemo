@@ -1,10 +1,10 @@
 const Express = require('express');
 const path = require('path');
+const port = process.env.PORT || 3000;
 
 const app = new Express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
-const port = process.env.PORT || 3000;
 
 app.use(Express.static(path.join(__dirname, 'public')));
 app.set('views', __dirname + '/views');
@@ -59,11 +59,11 @@ io.on('connection', socket => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname,'views','chat.html'));
+    res.sendFile(path.join(__dirname, 'views', 'chat.html'));
 });
 
-server.listen(port,function(){
-    console.log('server listening at port %d',port);
+server.listen(port, function () {
+    console.log('server listening at port %d', port);
 });
 
 let getTime = () => {
