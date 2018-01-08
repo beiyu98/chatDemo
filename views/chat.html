@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>socket.io simple chat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" media="screen" href="./css/main.css" />
+    <script src="http://cdn.staticfile.org/jquery/3.2.1/jquery.min.js" />
+    <script src="./javascripts/chat.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <h1>socket.io simple chat room</h1>
+    <div>
+        <span id="status">connecting...</span>
+        <input type="text" id="input">
+    </div>
+    <div id="content"></div>
+    <script>
+        $(function () {
+            let content = $('#content');
+            let status = $('#status');
+            let input = $('#input');
+            let myName = false;
+
+            socket = io.connect('http://localhost:3000');
+            socket.on('open', function () {
+                status.text('choose a name');
+            });
+
+            socket.on('system', function (json) {
+                let p = '';
+                if (json.type === 'welcome') {
+                    if (myName == json.text) {
+                        status.text(myName + ': ').css('color', json.color);
+                        p = '<p style="background:' + json.color + '">system@ ' + json.time + ' :welcome ' + json.text + '</p>';
+                    } else if (json.type == 'disconnect') {
+                        p = '<p style="background:' + json.color + '">system@ ' + json.time + ' :Bye' + json.text + '</p>';
+                    }
+                    content.prepend(p);
+                }
+            })
+
+            socket.on('message', function (json) {
+                let p = '<p><span style="color:' + json.color + ';">' + json.author + '</span> @' + json.time + ' :' + json.text + '</p>';
+                content.prepend(p);
+            });
+
+            input.keydown(function (e) {
+                if (e.keyCode === 13) {
+                    let msg = $(this).val();
+                    if (!msg) return;
+
+                    socket.send(msg);
+
+                    $(this).val('');
+                    if (myName === false) {
+                        myName = msg;
+                    }
+                }
+            })
+        });
+    </script>
+
+</html>
